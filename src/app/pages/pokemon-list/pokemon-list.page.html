@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pokemon list</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollEvents]="true" (ionScroll)="getScrollPos($event.detail.scrollTop)">
+  <ion-list lines="full">
+    <ion-item button *ngFor="let pokemon of pokemonList" routerLink="/pokemon-details/{{pokemon.pokeIndex}}">
+      <ion-avatar slot="start">
+        <img [src]="pokemon.image" style="background: #f2f2f2;"/>
+      </ion-avatar>
+      <ion-label class="ion-text-capitalize">
+        <h2>{{pokemon.name}}</h2>
+        <p>Poke Index # {{pokemon.pokeIndex}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more Pokemon ...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <ion-fab *ngIf="backToTop" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="goToTop()">
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

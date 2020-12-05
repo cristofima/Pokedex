@@ -1,0 +1,75 @@
+ion-chip{
+    --color: white !important;
+
+    &.normal{
+        --background: #aa9 !important;
+    }
+
+    &.fire{
+        --background: #f42 !important;
+    }
+
+    &.water{
+        --background: #39f !important;
+    }
+
+    &.electric{
+        --background: #fc3 !important;
+    }
+
+    &.grass{
+        --background: #7c5 !important;
+    }
+
+    &.ice{
+        --background: #6cf !important;
+    }
+
+    &.fighting{
+        --background: #b54 !important;
+    }
+
+    &.poison{
+        --background: #a59 !important;
+    }
+
+    &.ground{
+        --background: #db5 !important;
+    }
+
+    &.flying{
+        --background:#89f !important;
+    }
+
+    &.psychic{
+        --background: #f59 !important;
+    }
+
+    &.bug{
+        --background: #ab2 !important;
+    }
+
+    &.rock{
+        --background: #ba6 !important;
+    }
+
+    &.ghost{
+        --background: #66b !important;
+    }
+
+    &.dragon{
+        --background: #76e !important;
+    }
+
+    &.dark{
+        --background: #754 !important;
+    }
+
+    &.steel{
+        --background: #aab !important;
+    }
+
+    &.fairy{
+        --background: #e9e !important;
+    }
+}
