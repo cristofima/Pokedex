@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { EvolutionChain } from '../models/evolution-chain.model';
 
 @Injectable({
   providedIn: 'root'
@@ -51,5 +52,13 @@ export class PokemonService {
         return poke;
       })
     );
+  }
+
+  getSpecies(id: number) {
+    return this.http.get(`${environment.baseUrl}/pokemon-species/${id}`);
+  }
+
+  getEvolutionChain(url: string) {
+    return this.http.get<EvolutionChain>(url);
   }
 }

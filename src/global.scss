@@ -26,3 +26,8 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 @import "src/theme/chip";
+
+ion-content{
+    --padding-start: 5px;
+    --padding-end: 5px;
+}
