@@ -70,6 +70,10 @@ export class PokemonDetailsPage implements OnInit {
         item: evoDetails?.item,
         locationName: evoDetails?.location?.name,
         minAffection: evoDetails?.min_affection,
+        knownMove: evoDetails?.known_move?.name,
+        minBeauty: evoDetails?.min_beauty,
+        heldItem: evoDetails?.held_item?.name,
+        needsOverworldRain: evoDetails?.needs_overworld_rain,
         pokemonIndex: pokemonIndex
       });
 

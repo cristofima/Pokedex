@@ -8,6 +8,10 @@ export interface EvolutionChainDetails {
     timeOfDay?: number;
     locationName?: string;
     minAffection?: number;
+    minBeauty?: number;
+    knownMove?: string;
+    heldItem?: string;
+    needsOverworldRain?: boolean;
 }
 
 export interface EvolutionChain {

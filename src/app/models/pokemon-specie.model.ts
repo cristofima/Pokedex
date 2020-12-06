@@ -5,6 +5,7 @@ export interface PokemonSpecie {
     is_baby: boolean;
     is_legendary: boolean;
     is_mythical: boolean;
+    habitat: { name: string };
 }
 
 export interface Generation {
