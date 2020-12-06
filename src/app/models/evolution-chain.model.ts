@@ -4,6 +4,10 @@ export interface EvolutionChainDetails {
     triggerName?: any;
     item?: any;
     pokemonIndex: number;
+    minHappiness?: number;
+    timeOfDay?: number;
+    locationName?: string;
+    minAffection?: number;
 }
 
 export interface EvolutionChain {

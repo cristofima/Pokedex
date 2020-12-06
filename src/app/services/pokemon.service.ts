@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { EvolutionChain } from '../models/evolution-chain.model';
+import { PokemonSpecie } from '../models/pokemon-specie.model';
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +56,12 @@ export class PokemonService {
   }
 
   getSpecies(id: number) {
-    return this.http.get(`${environment.baseUrl}/pokemon-species/${id}`);
+    return this.http.get<PokemonSpecie>(`${environment.baseUrl}/pokemon-species/${id}`).pipe(
+      map(pokeSpecies => {
+        pokeSpecies.generation.numeral = Number(pokeSpecies.generation.url.replace("https://pokeapi.co/api/v2/generation/", "").replace("/", ""));
+        return pokeSpecies;
+      })
+    );
   }
 
   getEvolutionChain(url: string) {

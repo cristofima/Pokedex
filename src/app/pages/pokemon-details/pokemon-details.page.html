@@ -20,9 +20,14 @@
           <ion-chip [ngClass]="t.type.name" *ngFor="let t of details.types">
             <ion-label class="ion-text-capitalize">{{ t.type.name }}</ion-label>
           </ion-chip>
+          <p><b>Generation</b>: {{pokemonSpecie?.generation?.numeral}}</p>
           <p><b>Height</b>: {{ (details.height / 10) | number:'1.2-2' }} m</p>
           <p><b>Weight</b>: {{ (details.weight / 10) | number:'1.2-2' }} kg</p>
           <p><b>Base Experience</b>: {{ details.base_experience }}</p>
+          <p class="ion-text-capitalize"><b>Shape</b>: {{pokemonSpecie?.shape?.name}}</p>
+          <p><b>Is Baby</b>: {{ pokemonSpecie?.is_baby | booleanToString }}</p>
+          <p><b>Is Legendary</b>: {{ pokemonSpecie?.is_legendary | booleanToString }}</p>
+          <p><b>Is Mythical</b>: {{ pokemonSpecie?.is_mythical | booleanToString }}</p>
           <p><b>Abilities</b>:</p>
           <ul>
             <li class="ion-text-capitalize" *ngFor="let a of details.abilities">{{ a.ability.name }}</li>
@@ -54,34 +59,58 @@
     <ng-container *ngIf="evolutionChainDetailsList">
       <h4>Evolution Chart</h4>
 
-      <ion-grid>
-        <ion-row *ngFor="let ecd of evolutionChainDetailsList; let isLast = last">
-          <ng-container *ngIf="(ecd.triggerName == 'level-up' && ecd.minLevel); else itemEvolution">
-            <ion-col class="ion-text-center" size="12">
-              <span>(Level {{ecd.minLevel}})</span>
-            </ion-col>
-          </ng-container>
-          <ng-template #itemEvolution>
-            <ng-container *ngIf="ecd.triggerName == 'use-item' && ecd.item">
-              <ion-col class="ion-text-center" size="12">
-                <p class="ion-text-capitalize">(Use <b>{{ecd.item.name}}</b>)</p>
-                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/{{ecd.item.name}}.png"/>
-              </ion-col>
+      <ng-container *ngIf="(evolutionChainDetailsList.length > 1); else noEvolution">
+        <ion-grid>
+          <ion-row (click)="goToPokemon(ecd.pokemonIndex)" *ngFor="let ecd of evolutionChainDetailsList; let isLast = last">
+            <ng-container *ngIf="ecd.triggerName == 'level-up'; else noLevelEvolution">
+              <ng-container *ngIf="ecd.minLevel">
+                <ion-col class="ion-text-center" size="12">
+                  <span>(Level {{ecd.minLevel}})</span>
+                </ion-col>
+              </ng-container>
+              <ng-container *ngIf="ecd.minHappiness && ecd.timeOfDay">
+                <ion-col class="ion-text-center" size="12">
+                  <span>(<b>Min Friendship</b> {{ecd.minHappiness}}, during <span class="ion-text-capitalize"><b>{{ecd.timeOfDay}}</b></span>)</span>
+                </ion-col>
+              </ng-container>
+              <ng-container *ngIf="ecd.minAffection">
+                <ion-col class="ion-text-center" size="12">
+                  <span>(<b>Min Affection</b> {{ecd.minAffection}})</span>
+                </ion-col>
+              </ng-container>
+              <ng-container *ngIf="ecd.locationName">
+                <ion-col class="ion-text-center" size="12">
+                  <span>(Level Up in <span class="ion-text-capitalize"><b>{{ecd.locationName}}</b></span>)</span>
+                </ion-col>
+              </ng-container>
             </ng-container>
-          </ng-template>
 
-          <ion-col size="9">
-            <img style="max-height: 150px;" src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/{{ecd.pokemonIndex | number:'3.0-0'}}.png" />
-          </ion-col>
-          <ion-col size="3">
-            <p><b>#{{ecd.pokemonIndex}}</b></p>
-            <p class="ion-text-capitalize">{{ecd.speciesName}}</p>
-          </ion-col>
-          <ion-col class="ion-text-center" *ngIf="!isLast" size="12">
-            <h1><ion-icon name="arrow-down-outline"></ion-icon></h1>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+            <ng-template #noLevelEvolution>
+              <ng-container *ngIf="ecd.triggerName == 'use-item' && ecd.item">
+                <ion-col class="ion-text-center" size="12">
+                  <p class="ion-text-capitalize">(Use <b>{{ecd.item.name}}</b>)</p>
+                  <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/{{ecd.item.name}}.png"/>
+                </ion-col>
+              </ng-container>
+            </ng-template>
+  
+            <ion-col size="8">
+              <img style="max-height: 150px;" src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/{{ecd.pokemonIndex | number:'3.0-0'}}.png" />
+            </ion-col>
+            <ion-col size="4">
+              <p><b>#{{ecd.pokemonIndex}}</b></p>
+              <p class="ion-text-capitalize">{{ecd.speciesName}}</p>
+            </ion-col>
+            <ion-col class="ion-text-center" *ngIf="!isLast" size="12">
+              <h1><ion-icon name="arrow-down-outline"></ion-icon></h1>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ng-container>
+
+      <ng-template #noEvolution>
+        <p><span class="ion-text-capitalize">{{ details.name }}</span> doesn't evolve.</p>
+      </ng-template>
     </ng-container>
   </ng-container>
 </ion-content>

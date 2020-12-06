@@ -31,7 +31,7 @@ export class PokemonListPage implements OnInit {
       $event.target.complete();
       this.pokemonList = this.pokemonList.concat(res);
 
-      if (this.pokemonList.length >= 850) {
+      if (this.pokemonList.length >= 890) {
         $event.target.disabled = true;
       }
     });
