@@ -59,6 +59,10 @@ export class PokemonDetailsPage implements OnInit {
     do {
       let evoDetails = evoData['evolution_details'][evoData['evolution_details'].length -1];
 
+      if(evoDetails && !this.hasCorrectEvoDetailsData(evoDetails)){
+        evoDetails = evoData['evolution_details'][0];
+      };
+
       const pokemonIndex = Number(evoData.species.url.replace("https://pokeapi.co/api/v2/pokemon-species/", "").replace("/", ""));
     
       this.evolutionChainDetailsList.push({
@@ -74,6 +78,7 @@ export class PokemonDetailsPage implements OnInit {
         minBeauty: evoDetails?.min_beauty,
         heldItem: evoDetails?.held_item?.name,
         needsOverworldRain: evoDetails?.needs_overworld_rain,
+        gender: evoDetails?.gender ? (evoDetails.gender == 1 ? 'Female' : 'Male') : null,
         pokemonIndex: pokemonIndex
       });
 
@@ -110,6 +115,19 @@ export class PokemonDetailsPage implements OnInit {
         });
       }
     });
+  }
+
+  private hasCorrectEvoDetailsData(evoDetails: any){
+    if(evoDetails.trigger?.name == 'level-up'){
+      if(evoDetails.min_level || evoDetails.min_happiness || evoDetails.min_affection || evoDetails.location?.name 
+        || evoDetails.min_beauty || evoDetails.known_move?.name || (evoDetails.time_of_day && evoDetails.held_item?.name)){
+        return true;
+      }else{
+        return false;
+      }
+    }
+
+    return true;
   }
 
 }

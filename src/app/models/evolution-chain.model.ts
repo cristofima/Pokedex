@@ -13,6 +13,7 @@ export interface EvolutionChainDetails {
     heldItem?: string;
     needsOverworldRain?: boolean;
     types?: string[];
+    gender?: string;
 }
 
 export interface EvolutionChain {
