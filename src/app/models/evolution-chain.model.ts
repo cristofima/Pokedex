@@ -12,6 +12,7 @@ export interface EvolutionChainDetails {
     knownMove?: string;
     heldItem?: string;
     needsOverworldRain?: boolean;
+    types?: string[];
 }
 
 export interface EvolutionChain {

@@ -92,6 +92,24 @@ export class PokemonDetailsPage implements OnInit {
     
       evoData = evoData['evolves_to'][envolveIndex];
     } while (!!evoData && evoData.hasOwnProperty('evolves_to'));
+
+    this.getPokemonTypes();
+  }
+
+  private getPokemonTypes(){
+    const scope = this;
+    
+    this.evolutionChainDetailsList.forEach(function(evo, index, array){
+      if(evo.pokemonIndex == scope.details.id){
+        array[index].types = scope.details.types.map((x: { type: { name: string }}) => x.type.name);
+      }else{
+        scope.pokeService.getPokeDetails(evo.pokemonIndex).subscribe((res: any)=>{
+          if(res && res.types){
+            array[index].types = res.types.map((x: { type: { name: string }}) => x.type.name);
+          }
+        });
+      }
+    });
   }
 
 }

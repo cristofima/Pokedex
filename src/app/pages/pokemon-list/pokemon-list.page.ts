@@ -10,6 +10,7 @@ import { PokemonService } from 'src/app/services/pokemon.service';
 export class PokemonListPage implements OnInit {
 
   pokemonList: any[] = [];
+  private pokemonOriginalList: any[] = [];
   private offset = 0;
 
   backToTop: boolean;
@@ -21,15 +22,17 @@ export class PokemonListPage implements OnInit {
   ngOnInit() {
     this.pokemonService.getPokemonList().subscribe((res: any[])=>{
       this.pokemonList = res;
+      this.pokemonOriginalList = res;
     });
   }
 
   loadData($event){
-    this.offset+=25;
+    this.offset+= 25;
 
     this.pokemonService.getPokemonList(this.offset).subscribe((res: any[])=>{
       $event.target.complete();
-      this.pokemonList = this.pokemonList.concat(res);
+      this.pokemonList = this.pokemonOriginalList.concat(res);
+      this.pokemonOriginalList = this.pokemonList;
 
       if (this.pokemonList.length >= 890) {
         $event.target.disabled = true;
@@ -47,6 +50,10 @@ export class PokemonListPage implements OnInit {
 
   goToTop() {
     this.content.scrollToTop(1000);
+  }
+
+  searchPokemon($event: { detail: { value: string }}){
+    this.pokemonList = this.pokemonOriginalList.filter(x => x.name.toLocaleLowerCase().includes($event.detail.value.toLocaleLowerCase()));
   }
 
 }

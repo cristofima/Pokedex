@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -116,12 +116,15 @@
               </ion-col>
             </ng-container>
   
-            <ion-col size="8">
+            <ion-col size="6">
               <img style="max-height: 150px;" src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/{{ecd.pokemonIndex | number:'3.0-0'}}.png" />
             </ion-col>
-            <ion-col size="4">
+            <ion-col size="6">
               <p><b>#{{ecd.pokemonIndex}}</b></p>
               <p class="ion-text-capitalize">{{ecd.speciesName}}</p>
+              <ion-chip [ngClass]="type" *ngFor="let type of ecd.types">
+                <ion-label class="ion-text-capitalize">{{ type }}</ion-label>
+              </ion-chip>
             </ion-col>
             <ion-col class="ion-text-center" *ngIf="!isLast" size="12">
               <h1><ion-icon name="arrow-down-outline"></ion-icon></h1>
