@@ -79,6 +79,7 @@ export class PokemonDetailsPage implements OnInit {
         heldItem: evoDetails?.held_item?.name,
         needsOverworldRain: evoDetails?.needs_overworld_rain,
         gender: evoDetails?.gender ? (evoDetails.gender == 1 ? 'Female' : 'Male') : null,
+        relativePhysicalStats: evoDetails?.relative_physical_stats,
         pokemonIndex: pokemonIndex
       });
 

@@ -14,6 +14,7 @@ export interface EvolutionChainDetails {
     needsOverworldRain?: boolean;
     types?: string[];
     gender?: string;
+    relativePhysicalStats?: number;
 }
 
 export interface EvolutionChain {

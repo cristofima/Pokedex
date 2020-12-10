@@ -62,11 +62,15 @@
 
       <ng-container *ngIf="(evolutionChainDetailsList.length > 1); else noEvolution">
         <ion-grid>
-          <ion-row (click)="goToPokemon(ecd.pokemonIndex)" *ngFor="let ecd of evolutionChainDetailsList; let isLast = last" [ngSwitch]="ecd.triggerName">
+          <ion-row (click)="goToPokemon(ecd.pokemonIndex)" *ngFor="let ecd of evolutionChainDetailsList" [ngSwitch]="ecd.triggerName">
+            <ion-col class="ion-text-center" *ngIf="ecd.triggerName" size="12">
+              <h1><ion-icon name="arrow-down-outline"></ion-icon></h1>
+            </ion-col>
+            
             <ng-container *ngSwitchCase="'level-up'">
               <ng-container *ngIf="ecd.minLevel">
                 <ion-col class="ion-text-center" size="12">
-                  <span>(Level {{ecd.minLevel}}<ng-container *ngIf="ecd.timeOfDay || ecd.needsOverworldRain"> during <span class="ion-text-capitalize"><b>{{ecd.timeOfDay ? ecd.timeOfDay : 'Rain'}}</b></span></ng-container>)</span>
+                  <span>(Level {{ecd.minLevel}}<ng-container *ngIf="ecd.timeOfDay || ecd.needsOverworldRain"> during <span class="ion-text-capitalize"><b>{{ecd.timeOfDay ? ecd.timeOfDay : 'Rain'}}</b></span></ng-container><ng-container *ngIf="ecd.relativePhysicalStats != null">, <b>{{ecd.relativePhysicalStats | relativePhysicalStats}}</b></ng-container>)</span>
                 </ion-col>
               </ng-container>
               <ng-container *ngIf="ecd.minHappiness">
@@ -125,9 +129,6 @@
               <ion-chip [ngClass]="type" *ngFor="let type of ecd.types">
                 <ion-label class="ion-text-capitalize">{{ type }}</ion-label>
               </ion-chip>
-            </ion-col>
-            <ion-col class="ion-text-center" *ngIf="!isLast" size="12">
-              <h1><ion-icon name="arrow-down-outline"></ion-icon></h1>
             </ion-col>
           </ion-row>
         </ion-grid>
