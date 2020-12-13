@@ -1,12 +1,17 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Pokédex</ion-title>
+    <ion-title *ngIf="!isSearchBarOpened">Pokédex</ion-title>
+    <ion-searchbar *ngIf="isSearchBarOpened" showCancelButton="always" (ionChange)="searchPokemon($event)"
+      (ionCancel)="onCancelSearchBar()" placeholder="Search pokemon ..."></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!isSearchBarOpened" (click)="isSearchBarOpened = true">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [scrollEvents]="true" (ionScroll)="getScrollPos($event.detail.scrollTop)">
-  <ion-searchbar (ionChange)="searchPokemon($event)" placeholder="Search pokemon ..."></ion-searchbar>
-
   <ion-list lines="full">
     <ion-item button *ngFor="let pokemon of pokemonList" routerLink="/pokemon-details/{{pokemon.pokeIndex}}">
       <ion-avatar slot="start">

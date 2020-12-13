@@ -13,6 +13,8 @@ export class PokemonListPage implements OnInit {
   private pokemonOriginalList: any[] = [];
   private offset = 0;
 
+  isSearchBarOpened = false;
+
   backToTop: boolean;
 
   @ViewChild(IonContent) content: IonContent;
@@ -54,6 +56,11 @@ export class PokemonListPage implements OnInit {
 
   searchPokemon($event: { detail: { value: string }}){
     this.pokemonList = this.pokemonOriginalList.filter(x => x.name.toLocaleLowerCase().includes($event.detail.value.toLocaleLowerCase()));
+  }
+
+  onCancelSearchBar(){
+    this.isSearchBarOpened = false;
+    this.searchPokemon({detail: {value: ""}});
   }
 
 }
