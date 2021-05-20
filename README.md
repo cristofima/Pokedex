@@ -1,5 +1,5 @@
 # Pokédex
-Pokédex app in Ionic 5 with Angular 10
+Pokédex app in Ionic 5 with Angular 12
 
 ### Example
 
