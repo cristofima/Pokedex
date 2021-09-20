@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EvolutionChain, EvolutionChainDetails } from 'src/app/models/evolution-chain.model';
+import { OtherEvolution } from 'src/app/models/other-evolution.model';
 import { PokemonSpecie } from 'src/app/models/pokemon-specie.model';
 import { PokemonService } from 'src/app/services/pokemon.service';
 
@@ -12,11 +13,12 @@ import { PokemonService } from 'src/app/services/pokemon.service';
 export class PokemonDetailsPage implements OnInit {
 
   details: any;
-  statsSum = 0;
+  statsSum = 0;  
 
   pokemonSpecie: PokemonSpecie;
   evolutionChain: EvolutionChain;
   evolutionChainDetailsList: EvolutionChainDetails[];
+  otherEvolutionList: OtherEvolution[];
 
   constructor(private router: Router,private route: ActivatedRoute, private pokeService: PokemonService) { }
 
@@ -34,19 +36,56 @@ export class PokemonDetailsPage implements OnInit {
         stats.forEach(stat =>{
           this.statsSum+= stat.base_stat;
         });
-      });
 
-      this.pokeService.getSpecies(params.index).subscribe((specie: any)=>{
-        this.pokemonSpecie = specie;
-        if(this.pokemonSpecie && this.pokemonSpecie.evolution_chain?.url){
-          this.pokeService.getEvolutionChain(this.pokemonSpecie.evolution_chain.url).subscribe(res =>{
-            this.evolutionChain = res;
-            this.processEvolutionChain();
+        this.pokeService.getSpecies(params.index).subscribe((specie: any)=>{
+          this.pokemonSpecie = specie;
+          if(this.pokemonSpecie && this.pokemonSpecie.evolution_chain?.url){
+            this.pokeService.getEvolutionChain(this.pokemonSpecie.evolution_chain.url).subscribe(res =>{
+              this.evolutionChain = res;
+              this.processEvolutionChain();
+            });
+          }
+  
+          if(this.pokemonSpecie.varieties?.length){
+            this.processOtherEvolutions();
+          }
+        });
+      });
+    }
+  }
+  
+  private processOtherEvolutions(){
+    this.otherEvolutionList = this.pokemonSpecie.varieties.filter(x => !x.is_default).map(v => {
+      let pokemonId = Number(v.pokemon.url.replace("https://pokeapi.co/api/v2/pokemon/", "").replace("/", ""));
+      let name: string;
+      if(v.pokemon.name.includes("-mega")){
+        name = `Mega ${this.details.name}`;
+
+        if(v.pokemon.name.includes("mega-x")){
+          name += " X";
+        }else if(v.pokemon.name.includes("mega-y")){
+          name += " Y";
+        }
+      }else if(v.pokemon.name.includes("-gmax")){
+        name = `${this.details.name} Gigamax`;
+      }
+
+      return {
+        pokemonId: pokemonId,
+        name: name
+      }
+    });
+
+    this.otherEvolutionList.forEach(v => {
+      this.pokeService.getPokeDetails(v.pokemonId).subscribe((res: any) => {
+        if(res && res.types){
+          v.types = (res.types as any[]).map(x => {
+            return x.type.name;
           });
         }
       });
-    }
-  }  
+    })
+  }
 
   goToPokemon(index: number){
     this.router.navigate(["/pokemon-details/"+index]);
