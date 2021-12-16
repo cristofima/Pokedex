@@ -59,122 +59,136 @@
       </ion-card-content>
     </ion-card>
 
-    <ng-container *ngIf="evolutionChainDetailsList">
-      <h4>Evolution Chart</h4>
+    <ion-accordion-group>
+      <ion-accordion value="evolutions" *ngIf="evolutionChainDetailsList">
+        <ion-item slot="header">
+          <ion-label>Evolutions</ion-label>
+        </ion-item>
 
-      <ng-container *ngIf="(evolutionChainDetailsList.length > 1); else noEvolution">
-        <ion-grid>
-          <ion-row (click)="goToPokemon(ecd.pokemonIndex)" *ngFor="let ecd of evolutionChainDetailsList"
-            [ngSwitch]="ecd.triggerName">
-            <ion-col class="ion-text-center" *ngIf="ecd.triggerName" size="12">
-              <h1>
-                <ion-icon name="arrow-down-outline"></ion-icon>
-              </h1>
-            </ion-col>
+        <ion-list slot="content">
+          <ng-container *ngIf="(evolutionChainDetailsList.length > 1); else noEvolution">
+            <ion-grid>
+              <ion-row (click)="goToPokemon(ecd.pokemonIndex)" *ngFor="let ecd of evolutionChainDetailsList"
+                [ngSwitch]="ecd.triggerName">
+                <ion-col class="ion-text-center" *ngIf="ecd.triggerName" size="12">
+                  <h1>
+                    <ion-icon name="arrow-down-outline"></ion-icon>
+                  </h1>
+                </ion-col>
 
-            <ng-container *ngSwitchCase="'level-up'">
-              <ng-container *ngIf="ecd.minLevel">
-                <ion-col class="ion-text-center" size="12">
-                  <span>(Level {{ecd.minLevel}}<ng-container *ngIf="ecd.timeOfDay || ecd.needsOverworldRain"> during
-                      <span class="ion-text-capitalize"><b>{{ecd.timeOfDay ? ecd.timeOfDay : 'Rain'}}</b></span>
-                    </ng-container>
-                    <ng-container *ngIf="ecd.relativePhysicalStats != null">, <b>{{ecd.relativePhysicalStats |
-                        relativePhysicalStats}}</b></ng-container>)
-                  </span>
-                </ion-col>
-              </ng-container>
-              <ng-container *ngIf="ecd.minHappiness">
-                <ion-col class="ion-text-center" size="12">
-                  <span>(Level Up with <b>Min Happiness</b> {{ecd.minHappiness}}<ng-container *ngIf="ecd.timeOfDay">,
-                      during <span class="ion-text-capitalize"><b>{{ecd.timeOfDay}}</b></span></ng-container>)</span>
-                </ion-col>
-              </ng-container>
-              <ng-container *ngIf="ecd.minAffection">
-                <ion-col class="ion-text-center" size="12">
-                  <span>(<b>Min Affection</b> {{ecd.minAffection}})</span>
-                </ion-col>
-              </ng-container>
-              <ng-container *ngIf="ecd.locationName">
-                <ion-col class="ion-text-center" size="12">
-                  <span>(Level Up in <span class="ion-text-capitalize"><b>{{ecd.locationName}}</b></span>)</span>
-                </ion-col>
-              </ng-container>
-              <ng-container *ngIf="ecd.knownMove">
-                <ion-col class="ion-text-center" size="12">
-                  <span>(After <span class="ion-text-capitalize"><b>{{ecd.knownMove}}</b></span> learned)</span>
-                </ion-col>
-              </ng-container>
-              <ng-container *ngIf="ecd.minBeauty">
-                <ion-col class="ion-text-center" size="12">
-                  <span>(Level Up with <b>Min Beauty</b> {{ecd.minBeauty}})</span>
-                </ion-col>
-              </ng-container>
-              <ng-container *ngIf="ecd.timeOfDay && ecd.heldItem">
-                <ion-col class="ion-text-center" size="12">
-                  <span>(Level Up during <span class="ion-text-capitalize"><b>{{ecd.timeOfDay}}</b></span> holding <span
-                      class="ion-text-capitalize"><b>{{ecd.heldItem}}</b></span>)</span>
-                </ion-col>
-              </ng-container>
-            </ng-container>
+                <ng-container *ngSwitchCase="'level-up'">
+                  <ng-container *ngIf="ecd.minLevel">
+                    <ion-col class="ion-text-center" size="12">
+                      <span>(Level {{ecd.minLevel}}<ng-container *ngIf="ecd.timeOfDay || ecd.needsOverworldRain">
+                          during
+                          <span class="ion-text-capitalize"><b>{{ecd.timeOfDay ? ecd.timeOfDay : 'Rain'}}</b></span>
+                        </ng-container>
+                        <ng-container *ngIf="ecd.relativePhysicalStats != null">, <b>{{ecd.relativePhysicalStats |
+                            relativePhysicalStats}}</b></ng-container>)
+                      </span>
+                    </ion-col>
+                  </ng-container>
+                  <ng-container *ngIf="ecd.minHappiness">
+                    <ion-col class="ion-text-center" size="12">
+                      <span>(Level Up with <b>Min Happiness</b> {{ecd.minHappiness}}<ng-container *ngIf="ecd.timeOfDay">
+                          ,
+                          during <span class="ion-text-capitalize"><b>{{ecd.timeOfDay}}</b></span></ng-container>
+                        )</span>
+                    </ion-col>
+                  </ng-container>
+                  <ng-container *ngIf="ecd.minAffection">
+                    <ion-col class="ion-text-center" size="12">
+                      <span>(<b>Min Affection</b> {{ecd.minAffection}})</span>
+                    </ion-col>
+                  </ng-container>
+                  <ng-container *ngIf="ecd.locationName">
+                    <ion-col class="ion-text-center" size="12">
+                      <span>(Level Up in <span class="ion-text-capitalize"><b>{{ecd.locationName}}</b></span>)</span>
+                    </ion-col>
+                  </ng-container>
+                  <ng-container *ngIf="ecd.knownMove">
+                    <ion-col class="ion-text-center" size="12">
+                      <span>(After <span class="ion-text-capitalize"><b>{{ecd.knownMove}}</b></span> learned)</span>
+                    </ion-col>
+                  </ng-container>
+                  <ng-container *ngIf="ecd.minBeauty">
+                    <ion-col class="ion-text-center" size="12">
+                      <span>(Level Up with <b>Min Beauty</b> {{ecd.minBeauty}})</span>
+                    </ion-col>
+                  </ng-container>
+                  <ng-container *ngIf="ecd.timeOfDay && ecd.heldItem">
+                    <ion-col class="ion-text-center" size="12">
+                      <span>(Level Up during <span class="ion-text-capitalize"><b>{{ecd.timeOfDay}}</b></span> holding
+                        <span class="ion-text-capitalize"><b>{{ecd.heldItem}}</b></span>)</span>
+                    </ion-col>
+                  </ng-container>
+                </ng-container>
 
-            <ng-container *ngSwitchCase="'use-item'">
-              <ng-container *ngIf="ecd.item">
-                <ion-col class="ion-text-center" size="12">
-                  <p class="ion-text-capitalize">(Use <b>{{ecd.item.name}}</b>
-                    <ng-container *ngIf="ecd.gender">, <span class="ion-text-capitalize">{{ecd.gender}}</span>
-                    </ng-container>)
-                  </p>
-                  <img
-                    src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/{{ecd.item.name}}.png" />
-                </ion-col>
-              </ng-container>
-            </ng-container>
+                <ng-container *ngSwitchCase="'use-item'">
+                  <ng-container *ngIf="ecd.item">
+                    <ion-col class="ion-text-center" size="12">
+                      <p class="ion-text-capitalize">(Use <b>{{ecd.item.name}}</b>
+                        <ng-container *ngIf="ecd.gender">, <span class="ion-text-capitalize">{{ecd.gender}}</span>
+                        </ng-container>)
+                      </p>
+                      <img
+                        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/{{ecd.item.name}}.png" />
+                    </ion-col>
+                  </ng-container>
+                </ng-container>
 
-            <ng-container *ngSwitchCase="'trade'">
-              <ion-col class="ion-text-center" size="12">
-                <p>(Trade<ng-container *ngIf="ecd.heldItem"> holding <span
-                      class="ion-text-capitalize"><b>{{ecd.heldItem}}</b></span></ng-container>)</p>
+                <ng-container *ngSwitchCase="'trade'">
+                  <ion-col class="ion-text-center" size="12">
+                    <p>(Trade<ng-container *ngIf="ecd.heldItem"> holding <span
+                          class="ion-text-capitalize"><b>{{ecd.heldItem}}</b></span></ng-container>)</p>
+                  </ion-col>
+                </ng-container>
+
+                <ion-col size="6">
+                  <img style="max-height: 150px;"
+                    src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/{{ecd.pokemonIndex | number:'3.0-0'}}.png" />
+                </ion-col>
+                <ion-col size="6">
+                  <p><b>#{{ecd.pokemonIndex}}</b></p>
+                  <p class="ion-text-capitalize">{{ecd.speciesName}}</p>
+                  <ion-chip [ngClass]="type" *ngFor="let type of ecd.types">
+                    <ion-label class="ion-text-capitalize">{{ type }}</ion-label>
+                  </ion-chip>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ng-container>
+
+          <ng-template #noEvolution>
+            <p style="padding-left: 15px"><span class="ion-text-capitalize">{{ details.name }}</span> doesn't evolve.
+            </p>
+          </ng-template>
+        </ion-list>
+      </ion-accordion>
+
+      <ion-accordion value="other-evolutions" *ngIf="otherEvolutionList && otherEvolutionList.length">
+        <ion-item slot="header">
+          <ion-label>Other Evolutions</ion-label>
+        </ion-item>
+
+        <ion-list slot="content">
+          <ion-grid>
+            <ion-row *ngFor="let ev of otherEvolutionList; let i = index">
+              <ion-col size="6">
+                <img style="max-height: 150px;"
+                  src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/0{{details.id | number:'2.0-0'}}_f{{i + 2}}.png" />
               </ion-col>
-            </ng-container>
-
-            <ion-col size="6">
-              <img style="max-height: 150px;"
-                src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/{{ecd.pokemonIndex | number:'3.0-0'}}.png" />
-            </ion-col>
-            <ion-col size="6">
-              <p><b>#{{ecd.pokemonIndex}}</b></p>
-              <p class="ion-text-capitalize">{{ecd.speciesName}}</p>
-              <ion-chip [ngClass]="type" *ngFor="let type of ecd.types">
-                <ion-label class="ion-text-capitalize">{{ type }}</ion-label>
-              </ion-chip>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ng-container>
-
-      <ng-template #noEvolution>
-        <p><span class="ion-text-capitalize">{{ details.name }}</span> doesn't evolve.</p>
-      </ng-template>
-    </ng-container>
-
-    <ng-container *ngIf="otherEvolutionList && otherEvolutionList.length">
-      <h4>Other Evolutions</h4>
-
-      <ion-grid>
-        <ion-row *ngFor="let ev of otherEvolutionList; let i = index">
-          <ion-col size="6">
-            <img style="max-height: 150px;"
-              src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/0{{details.id | number:'2.0-0'}}_f{{i + 2}}.png" />
-          </ion-col>
-          <ion-col size="6">
-            <p><b>#{{details.id}}</b></p>
-            <p class="ion-text-capitalize">{{ev.name}}</p>
-            <ion-chip [ngClass]="type" *ngFor="let type of ev.types">
-              <ion-label class="ion-text-capitalize">{{ type }}</ion-label>
-            </ion-chip>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ng-container>
+              <ion-col size="6">
+                <p><b>#{{details.id}}</b></p>
+                <p class="ion-text-capitalize">{{ev.name}}</p>
+                <ion-chip [ngClass]="type" *ngFor="let type of ev.types">
+                  <ion-label class="ion-text-capitalize">{{ type }}</ion-label>
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-list>
+      </ion-accordion>
+    </ion-accordion-group>
   </ng-container>
 </ion-content>
