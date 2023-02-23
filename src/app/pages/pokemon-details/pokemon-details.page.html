@@ -10,8 +10,11 @@
 <ion-content>
   <ng-container *ngIf="details">
     <div class="ion-text-center">
-      <img style="max-height: 250px;"
+      <img style="max-height: 250px;" *ngIf="!isOtherEvolution"
         src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/{{details.id | number:'3.0-0'}}.png" />
+
+      <img style="max-height: 250px;" *ngIf="isOtherEvolution"
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/0{{mainIndex | number:'2.0-0'}}_f{{otherEvolutionImgIndex}}.png" />
     </div>
 
     <ion-card>
@@ -173,7 +176,8 @@
 
         <ion-list slot="content">
           <ion-grid>
-            <ion-row *ngFor="let ev of otherEvolutionList; let i = index">
+            <ion-row *ngFor="let ev of otherEvolutionList; let i = index"
+              (click)="goToPokemon(ev.pokemonId, details.id, true, i + 2)">
               <ion-col size="6">
                 <img style="max-height: 150px;"
                   src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/0{{details.id | number:'2.0-0'}}_f{{i + 2}}.png" />

@@ -1,7 +1,12 @@
-ion-header{
-    ion-searchbar{
-        &.ios{
+ion-header {
+    ion-searchbar {
+        &.ios {
             padding-top: 15px;
         }
     }
+}
+
+.empty-message {
+    text-align: center;
+    margin-top: 20em;
 }

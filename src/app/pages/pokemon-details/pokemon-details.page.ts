@@ -13,60 +13,72 @@ import { PokemonService } from 'src/app/services/pokemon.service';
 export class PokemonDetailsPage implements OnInit {
 
   details: any;
-  statsSum = 0;  
+  statsSum = 0;
+  isOtherEvolution = false;
+  mainIndex = 0;
+  otherEvolutionImgIndex = 0;
 
   pokemonSpecie: PokemonSpecie;
   evolutionChain: EvolutionChain;
   evolutionChainDetailsList: EvolutionChainDetails[];
   otherEvolutionList: OtherEvolution[];
 
-  constructor(private router: Router,private route: ActivatedRoute, private pokeService: PokemonService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private pokeService: PokemonService) { }
 
   ngOnInit() {
     const params = this.route.snapshot.params;
-    if(params && params.index){
+    if (params && params.index) {
       this.details = {};
       this.details.id = params.index;
+
+      let queryParams = this.route.snapshot.queryParams;
+      if (queryParams && queryParams.isOtherEvolution && queryParams.otherEvolutionImgIndex && queryParams.mainIndex) {
+        this.isOtherEvolution = queryParams.isOtherEvolution.toLowerCase() == "true";
+        this.mainIndex = Number(queryParams.mainIndex);
+        this.otherEvolutionImgIndex = Number(queryParams.otherEvolutionImgIndex);
+      }
 
       this.pokeService.getPokeDetails(params.index).subscribe(details => {
         this.details = details;
 
-        const stats: {base_stat: number}[] = this.details.stats;
+        const stats: { base_stat: number }[] = this.details.stats;
 
-        stats.forEach(stat =>{
-          this.statsSum+= stat.base_stat;
+        stats.forEach(stat => {
+          this.statsSum += stat.base_stat;
         });
 
-        this.pokeService.getSpecies(params.index).subscribe((specie: any)=>{
-          this.pokemonSpecie = specie;
-          if(this.pokemonSpecie && this.pokemonSpecie.evolution_chain?.url){
-            this.pokeService.getEvolutionChain(this.pokemonSpecie.evolution_chain.url).subscribe(res =>{
-              this.evolutionChain = res;
-              this.processEvolutionChain();
-            });
-          }
-  
-          if(this.pokemonSpecie.varieties?.length){
-            this.processOtherEvolutions();
-          }
-        });
+        if (!this.isOtherEvolution) {
+          this.pokeService.getSpecies(params.index).subscribe((specie: any) => {
+            this.pokemonSpecie = specie;
+            if (this.pokemonSpecie && this.pokemonSpecie.evolution_chain?.url) {
+              this.pokeService.getEvolutionChain(this.pokemonSpecie.evolution_chain.url).subscribe(res => {
+                this.evolutionChain = res;
+                this.processEvolutionChain();
+              });
+            }
+
+            if (this.pokemonSpecie.varieties?.length) {
+              this.processOtherEvolutions();
+            }
+          });
+        }
       });
     }
   }
-  
-  private processOtherEvolutions(){
+
+  private processOtherEvolutions() {
     this.otherEvolutionList = this.pokemonSpecie.varieties.filter(x => !x.is_default).map(v => {
       let pokemonId = Number(v.pokemon.url.replace("https://pokeapi.co/api/v2/pokemon/", "").replace("/", ""));
       let name: string;
-      if(v.pokemon.name.includes("-mega")){
+      if (v.pokemon.name.includes("-mega")) {
         name = `Mega ${this.details.name}`;
 
-        if(v.pokemon.name.includes("mega-x")){
+        if (v.pokemon.name.includes("mega-x")) {
           name += " X";
-        }else if(v.pokemon.name.includes("mega-y")){
+        } else if (v.pokemon.name.includes("mega-y")) {
           name += " Y";
         }
-      }else if(v.pokemon.name.includes("-gmax")){
+      } else if (v.pokemon.name.includes("-gmax")) {
         name = `${this.details.name} Gigamax`;
       }
 
@@ -78,7 +90,7 @@ export class PokemonDetailsPage implements OnInit {
 
     this.otherEvolutionList.forEach(v => {
       this.pokeService.getPokeDetails(v.pokemonId).subscribe((res: any) => {
-        if(res && res.types){
+        if (res && res.types) {
           v.types = (res.types as any[]).map(x => {
             return x.type.name;
           });
@@ -87,23 +99,26 @@ export class PokemonDetailsPage implements OnInit {
     })
   }
 
-  goToPokemon(index: number){
-    this.router.navigate(["/pokemon-details/"+index]);
+  goToPokemon(index: number, mainIndex = 0, isOtherEvolution = false, otherEvolutionImgIndex = 0) {
+    this.router.navigate(["/pokemon-details/" + index,],
+      {
+        queryParams: { isOtherEvolution: isOtherEvolution, mainIndex: mainIndex, otherEvolutionImgIndex: otherEvolutionImgIndex }
+      });
   }
 
-  private processEvolutionChain(){
+  private processEvolutionChain() {
     let evoData = this.evolutionChain.chain;
     this.evolutionChainDetailsList = [];
 
     do {
-      let evoDetails = evoData['evolution_details'][evoData['evolution_details'].length -1];
+      let evoDetails = evoData['evolution_details'][evoData['evolution_details'].length - 1];
 
-      if(evoDetails && !this.hasCorrectEvoDetailsData(evoDetails)){
+      if (evoDetails && !this.hasCorrectEvoDetailsData(evoDetails)) {
         evoDetails = evoData['evolution_details'][0];
       };
 
       const pokemonIndex = Number(evoData.species.url.replace("https://pokeapi.co/api/v2/pokemon-species/", "").replace("/", ""));
-    
+
       this.evolutionChainDetailsList.push({
         speciesName: evoData.species.name,
         minLevel: evoDetails?.min_level,
@@ -128,41 +143,41 @@ export class PokemonDetailsPage implements OnInit {
 
       const scope = this;
 
-      envolves.forEach(function(e, index, array){
+      envolves.forEach(function (e, index, array) {
         const pokeIndex = Number(e.species.url.replace("https://pokeapi.co/api/v2/pokemon-species/", "").replace("/", ""));
-        if(pokeIndex == scope.details.id){
+        if (pokeIndex == scope.details.id) {
           envolveIndex = index;
         }
       });
-    
+
       evoData = evoData['evolves_to'][envolveIndex];
     } while (!!evoData && evoData.hasOwnProperty('evolves_to'));
 
     this.getPokemonTypes();
   }
 
-  private getPokemonTypes(){
+  private getPokemonTypes() {
     const scope = this;
-    
-    this.evolutionChainDetailsList.forEach(function(evo, index, array){
-      if(evo.pokemonIndex == scope.details.id){
-        array[index].types = scope.details.types.map((x: { type: { name: string }}) => x.type.name);
-      }else{
-        scope.pokeService.getPokeDetails(evo.pokemonIndex).subscribe((res: any)=>{
-          if(res && res.types){
-            array[index].types = res.types.map((x: { type: { name: string }}) => x.type.name);
+
+    this.evolutionChainDetailsList.forEach(function (evo, index, array) {
+      if (evo.pokemonIndex == scope.details.id) {
+        array[index].types = scope.details.types.map((x: { type: { name: string } }) => x.type.name);
+      } else {
+        scope.pokeService.getPokeDetails(evo.pokemonIndex).subscribe((res: any) => {
+          if (res && res.types) {
+            array[index].types = res.types.map((x: { type: { name: string } }) => x.type.name);
           }
         });
       }
     });
   }
 
-  private hasCorrectEvoDetailsData(evoDetails: any){
-    if(evoDetails.trigger?.name == 'level-up'){
-      if(evoDetails.min_level || evoDetails.min_happiness || evoDetails.min_affection || evoDetails.location?.name 
-        || evoDetails.min_beauty || evoDetails.known_move?.name || (evoDetails.time_of_day && evoDetails.held_item?.name)){
+  private hasCorrectEvoDetailsData(evoDetails: any) {
+    if (evoDetails.trigger?.name == 'level-up') {
+      if (evoDetails.min_level || evoDetails.min_happiness || evoDetails.min_affection || evoDetails.location?.name
+        || evoDetails.min_beauty || evoDetails.known_move?.name || (evoDetails.time_of_day && evoDetails.held_item?.name)) {
         return true;
-      }else{
+      } else {
         return false;
       }
     }

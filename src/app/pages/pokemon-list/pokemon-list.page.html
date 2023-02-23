@@ -12,10 +12,10 @@
 </ion-header>
 
 <ion-content [scrollEvents]="true" (ionScroll)="getScrollPos($event.detail.scrollTop)">
-  <ion-list lines="full">
+  <ion-list lines="full" *ngIf="pokemonList && pokemonList.length; else emptyMessage">
     <ion-item button *ngFor="let pokemon of pokemonList" routerLink="/pokemon-details/{{pokemon.pokeIndex}}">
       <ion-avatar slot="start">
-        <img [src]="pokemon.image" style="background: #f2f2f2;"/>
+        <img [src]="pokemon.image" style="background: #f2f2f2;" />
       </ion-avatar>
       <ion-label class="ion-text-capitalize">
         <h2>{{pokemon.name}}</h2>
@@ -24,10 +24,14 @@
     </ion-item>
   </ion-list>
 
+  <ng-template #emptyMessage>
+    <div class="empty-message">
+      <h2>No Pokemon found</h2>
+    </div>
+  </ng-template>
+
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content
-      loadingSpinner="bubbles"
-      loadingText="Loading more Pokemon ...">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more Pokemon ...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
